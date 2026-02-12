@@ -1,5 +1,7 @@
-import { MongoClient, Collection, ObjectId as MongoObjectId } from "mongodb";
 
+
+import { MongoClient, Collection, ObjectId as MongoObjectId } from "mongodb";
+import { Artist } from "../api/artists/route";
 declare global {
   // Track MongoDB client promise across hot reloads
   // eslint-disable-next-line no-var
@@ -20,8 +22,8 @@ if (!globalThis._mongoClientPromise) {
 
 export async function getCollection(): Promise<Collection> {
   const client = await clientPromise;
-  const db = client.db("festival"); // DB name
-  return db.collection("artists"); // Collection name
+  const db = client.db("festival-contacts"); // DB name
+  return db.collection("data"); // Collection name
 }
 
 export { MongoObjectId as ObjectId };
