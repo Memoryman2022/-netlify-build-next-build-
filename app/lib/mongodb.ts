@@ -1,7 +1,7 @@
 
 
 import { MongoClient, Collection, ObjectId as MongoObjectId } from "mongodb";
-import { Artist } from "../api/artists/route";
+
 declare global {
   // Track MongoDB client promise across hot reloads
   // eslint-disable-next-line no-var
