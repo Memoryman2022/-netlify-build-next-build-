@@ -60,3 +60,26 @@ export async function PATCH(req: NextRequest) {
   // If it's a single update without ids, return 400
   return NextResponse.json({ error: "Invalid PATCH request, missing ids for bulk update" }, { status: 400 });
 }
+
+// DELETE selected artists (bulk delete)
+export async function DELETE(req: NextRequest) {
+  const body: { ids: string[] } = await req.json();
+  const collection = await getCollection();
+
+  if (!body.ids || !Array.isArray(body.ids)) {
+    return NextResponse.json(
+      { error: "Missing ids array" },
+      { status: 400 }
+    );
+  }
+
+  const objectIds = body.ids.map((id) => new ObjectId(id));
+
+  const result = await collection.deleteMany({
+    _id: { $in: objectIds },
+  });
+
+  return NextResponse.json({
+    deleted: result.deletedCount,
+  });
+}

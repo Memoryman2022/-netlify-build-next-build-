@@ -160,6 +160,31 @@ export default function Home() {
     alert(`Saved ${selected.length} artist(s)`);
   };
 
+  // 🗑️ DELETE SELECTED ARTISTS
+  const deleteSelected = async () => {
+    const selected = artists.filter((a) => a.selected && !a.isTemp);
+    if (!selected.length) return;
+
+    const confirmDelete = confirm(
+      `Delete ${selected.length} artist(s)? This cannot be undone.`
+    );
+
+    if (!confirmDelete) return;
+
+    await fetch("/api/artists", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ids: selected.map((a) => a._id),
+      }),
+    });
+
+    // Remove from UI
+    setArtists((prev) => prev.filter((a) => !a.selected));
+
+    alert(`Deleted ${selected.length} artist(s)`);
+  };
+
   // ✅ MAIN PAGE
 
   return (
@@ -172,14 +197,22 @@ export default function Home() {
         onToggleSelect={toggleSelect}
       />
 
-      <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
-        <button onClick={addArtist}>➕ Add Artist</button>
+      <div style={{ marginTop: 20, display: "flex", justifyContent: "center",gap: 10 }}>
+        <button onClick={addArtist}
+        style={{background: "blue", padding: 5 }}>➕ Add Artist</button>
 
         <button
           onClick={saveSelected}
-          style={{ background: "red", padding: 5 }}
+          style={{ background: "green", padding: 5 }}
         >
           💾 Save Selected
+        </button>
+
+        <button
+          onClick={deleteSelected}
+          style={{ background: "red", color: "white", padding: 5 }}
+        >
+          🗑️ Delete Selected
         </button>
       </div>
     </main>
